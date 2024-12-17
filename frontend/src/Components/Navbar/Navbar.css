@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+:root {
+    --primary-bg: #2c3e50;
+    --secondary-bg: #34495e;
+    --text-color: #ecf0f1;
+    --accent-color: #e74c3c;
+    --transition-speed: 0.3s;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.navbar {
+    background: var(--primary-bg);
+    color: var(--text-color);
+    height: 100vh;
+    width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.3);
+    transition: width var(--transition-speed) ease;
+    overflow: hidden;
+}
+
+.navbar.collapsed {
+    width: 80px;
+}
+
+.navbar-toggle-btn {
+    position: absolute;
+    top: 80px;
+    right: 15px;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity var(--transition-speed) ease;
+    z-index: 1001;
+    color: var(--text-color);
+}
+
+.navbar-toggle-btn:hover {
+    opacity: 1;
+}
+
+.vertical-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100%;
+    padding: 100px 0 2rem 0; 
+    overflow-y: auto;
+}
+
+.vertical-logo-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.vertical-logo {
+    height: 80px;
+    width: auto;
+    transition: transform var(--transition-speed) ease;
+}
+
+.navbar.collapsed .vertical-logo {
+    transform: scale(0.8);
+}
+
+.vertical-nav-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 1rem;
+    padding: 0;
+}
+
+.vertical-nav-links li {
+    width: 100%;
+    text-align: center;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0.75rem 1.5rem;
+    transition: all var(--transition-speed) ease;
+    position: relative;
+}
+
+.navbar.collapsed .nav-link {
+    justify-content: center;
+}
+
+.nav-link .nav-icon {
+    margin-right: 1rem;
+    font-size: 1.2rem;
+}
+
+.navbar.collapsed .nav-link .nav-text {
+    display: none;
+}
+
+.nav-link .nav-text {
+    transition: opacity var(--transition-speed) ease;
+}
+
+.nav-link:hover {
+    background-color: var(--secondary-bg);
+    color:#3498db;
+}
+
+.nav-link.active {
+    font-weight: 600;
+    color: var(--accent-color);
+    background-color: rgba(231, 76, 60, 0.1);
+}
+
+.cart-badge {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    background-color: var(--accent-color);
+    color: white;
+    border-radius: 50%;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.7rem;
+}
+
+
+
+/* Responsive Mobile Adjustments */
+@media screen and (max-width: 768px) {
+    .navbar {
+        transform: translateX(-100%);
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .navbar.mobile-open {
+        transform: translateX(0);
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .navbar {
+        max-width: 100%;
+    }
+
+    .vertical-logo {
+        height: 60px;
+    }
+}

@@ -1,0 +1,161 @@
+.order-popup-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(135deg, #FF6B4A, #FF9800);
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
+    z-index: 1000;
+    font-family: 'Arial', sans-serif;
+    gap: 15px;
+}
+
+.cooking-animation {
+    position: relative;
+    width: 80px;
+    height: 60px;
+}
+
+.pot {
+    width: 50px;
+    height: 40px;
+    background: #fff;
+    border-radius: 0 0 10px 10px;
+    position: absolute;
+    bottom: 0;
+    left: 15px;
+    animation: pot-shake 1s infinite alternate;
+}
+
+.steam {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.steam-line {
+    width: 2px;
+    height: 15px;
+    background: rgba(255,255,255,0.7);
+    position: absolute;
+    opacity: 0;
+    animation: steam-rise 2s infinite;
+}
+
+.steam-line:nth-child(1) {
+    left: -10px;
+    animation-delay: 0.2s;
+}
+
+.steam-line:nth-child(2) {
+    left: 0;
+    animation-delay: 0.4s;
+}
+
+.steam-line:nth-child(3) {
+    left: 10px;
+    animation-delay: 0.6s;
+}
+
+.spatula {
+    position: absolute;
+    width: 30px;
+    height: 10px;
+    background: #E0E0E0;
+    bottom: -10px;
+    right: 0;
+    transform: rotate(45deg);
+    animation: spatula-move 1.5s infinite alternate;
+}
+
+.popup-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 1;
+}
+
+.popup-content p {
+    margin: 0;
+    font-size: 16px;
+    flex-grow: 1;
+    color: #fff;
+}
+
+.popup-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.view-order-btn {
+    background-color: white;
+    color: #FF6B4A;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.view-order-btn:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.05);
+}
+
+.timer {
+    margin-right: 20px;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+    color: #FF4500;
+}
+
+.animated-slide-up {
+    animation: slide-up 0.5s ease-out;
+}
+
+@keyframes pot-shake {
+    from { transform: rotate(-2deg); }
+    to { transform: rotate(2deg); }
+}
+
+@keyframes steam-rise {
+    0%, 100% { 
+        opacity: 0;
+        transform: translateY(0) scale(0.5);
+    }
+    50% { 
+        opacity: 1;
+        transform: translateY(-20px) scale(1);
+    }
+}
+
+@keyframes spatula-move {
+    from { transform: rotate(40deg); }
+    to { transform: rotate(50deg); }
+}
+
+@keyframes slide-up {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}

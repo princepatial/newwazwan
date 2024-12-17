@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+:root {
+  --color-background: #f4f7f6;
+  --color-primary: #2c3e50;
+  --color-secondary: #34495e;
+  --color-accent: #4CAF50;
+  --color-text-light: #7f8c8d;
+  --color-white: #ffffff;
+  --transition-speed: 0.3s;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-primary);
+  line-height: 1.6;
+}
+
+.elegant-order-success {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: var(--color-background);
+}
+
+.order-success-content {
+  background-color: var(--color-white);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  max-width: 600px;
+  width: 100%;
+  padding: 3rem;
+  text-align: center;
+  transition: transform var(--transition-speed) ease;
+}
+
+.order-success-content:hover {
+  transform: translateY(-5px);
+}
+
+.success-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.success-icon svg {
+  width: 100px;
+  height: 100px;
+}
+
+.success-title {
+  font-size: 2.5rem;
+  color: var(--color-primary);
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.order-details {
+  background-color: var(--color-background);
+  border-radius: 8px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.detail-label {
+  color: var(--color-text-light);
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.detail-value {
+  color: var(--color-secondary);
+  font-weight: 600;
+}
+
+.order-summary {
+  text-align: center;
+}
+
+.summary-text {
+  color: var(--color-text-light);
+  font-size: 1rem;
+}
+
+.order-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.action-button1 {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all var(--transition-speed) ease;
+  cursor: pointer;
+}
+
+.action-button1 {
+  background-color: var(--color-accent);
+  color: var(--color-white);
+  border: 2px solid var(--color-accent);
+}
+
+.action-button1:hover {
+  background-color: darken(#4CAF50, 10%);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+}
+
+.action-button1.secondary {
+  background-color: transparent;
+  color: var(--color-accent);
+  border: 2px solid var(--color-accent);
+}
+
+
+
+.action-button1 a {
+  text-decoration: none;
+   color:#4CAF50;
+}
+
+
+@media (max-width: 768px) {
+  .order-success-content {
+    padding: 2rem;
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .order-actions {
+    flex-direction: column;
+  }
+
+  .action-button {
+    width: 100%;
+  }
+}
