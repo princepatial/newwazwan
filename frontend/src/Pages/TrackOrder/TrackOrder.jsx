@@ -12,6 +12,8 @@ const TrackOrder = () => {
   const socketRef = useRef(null);
   const [progress, setProgress] = useState(0);
   const autoRefreshRef = useRef(null);
+  const progressTimerRef = useRef(null);
+  const progressStartTimeRef = useRef(null);
 
   const [stages, setStages] = useState([
     {
@@ -40,13 +42,12 @@ const TrackOrder = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
 
-  // WebSocket connection with improved error handling
+  // WebSocket connection (existing implementation)
   const connectWebSocket = useCallback(() => {
-    // Disconnect existing socket if any
     if (socketRef.current) {
       socketRef.current.disconnect();
     }
-  
+
     const newSocket = io('http://localhost:5000/orders', {
       transports: ['websocket', 'polling'],
       forceNew: true,
@@ -57,14 +58,14 @@ const TrackOrder = () => {
         'X-Custom-Header': 'TrackOrder'
       }
     });
-  
+
     socketRef.current = newSocket;
-  
+
     newSocket.on('connect', () => {
       console.log('WebSocket connected successfully');
       newSocket.emit('joinOrder', orderId);
     });
-  
+
     newSocket.on('orderStatusUpdated', (updatedOrder) => {
       console.log('Real-time order status update:', updatedOrder);
       setOrderDetails(prev => ({
@@ -73,15 +74,15 @@ const TrackOrder = () => {
       }));
       updateOrderStages(updatedOrder.orderStatus);
     });
-  
+
     newSocket.on('connect_error', (error) => {
       console.error('Detailed WebSocket connection error:', error);
     });
-  
+
     return newSocket;
   }, [orderId]);
 
-  // Comprehensive order details fetching from database
+  // Fetch order details (existing implementation)
   const fetchOrderDetailsFromDB = useCallback(async () => {
     try {
       const response = await fetch(`http://localhost:5000/orders/status/${orderId}`, {
@@ -98,8 +99,7 @@ const TrackOrder = () => {
       }
 
       const data = await response.json();
-      
-      // Ensure comprehensive order details are set
+
       setOrderDetails(prevDetails => {
         const hasChanged = JSON.stringify(prevDetails) !== JSON.stringify({
           orderId: data.orderId,
@@ -126,7 +126,6 @@ const TrackOrder = () => {
         };
       });
 
-      // Remove initial loading state after first successful fetch
       if (isLoading) {
         setIsLoading(false);
       }
@@ -137,43 +136,106 @@ const TrackOrder = () => {
     }
   }, [orderId, isLoading]);
 
-  // Update stages based on order status
+  // Update order stages
   const updateOrderStages = (currentStatus) => {
-    const statusPriority = ['pending', 'accepted', 'ready'];
+    const statusPriority = ['pending', 'accepted', 'cooking', 'ready'];
     const currentIndex = statusPriority.indexOf(currentStatus?.toLowerCase() || 'pending');
 
-    const updatedStages = stages.map((stage, index) => ({
-      ...stage,
-      completed: index <= currentIndex
-    }));
+    let updatedStages;
+    let newProgress = progress;
+
+    switch (currentStatus?.toLowerCase()) {
+      case 'pending':
+        updatedStages = stages.map(stage => ({ ...stage, completed: false }));
+        newProgress = 0;
+        // Stop and clear timer
+        if (progressTimerRef.current) {
+          clearInterval(progressTimerRef.current);
+          progressTimerRef.current = null;
+          progressStartTimeRef.current = null;
+        }
+        break;
+      case 'accepted':
+        updatedStages = stages.map((stage, index) => ({
+          ...stage,
+          completed: index === 0
+        }));
+
+        // Start timer only if not already started
+        if (!progressStartTimeRef.current) {
+          startProgressTimer();
+        }
+        break;
+      case 'cooking':
+        updatedStages = stages.map((stage, index) => ({
+          ...stage,
+          completed: index <= 1
+        }));
+        break;
+      case 'ready':
+        updatedStages = stages.map(stage => ({
+          ...stage,
+          completed: true
+        }));
+
+        // Stop timer and set progress to 100%
+        if (progressTimerRef.current) {
+          clearInterval(progressTimerRef.current);
+          progressTimerRef.current = null;
+          progressStartTimeRef.current = null;
+        }
+        newProgress = 100;
+        break;
+      default:
+        updatedStages = stages;
+    }
 
     setStages(updatedStages);
-    setProgress(currentIndex > 0 ? (currentIndex / (statusPriority.length - 1)) * 100 : 0);
+    setProgress(newProgress);
   };
 
-  // Fetch order details and set up WebSocket on mount
+  // Start progress timer
+  const startProgressTimer = () => {
+    const TOTAL_TIME = 15 * 60 * 1000; // 15 minutes in milliseconds
+
+    // Set start time
+    progressStartTimeRef.current = Date.now();
+
+    progressTimerRef.current = setInterval(() => {
+      if (!progressStartTimeRef.current) return;
+
+      const elapsedTime = Date.now() - progressStartTimeRef.current;
+      const newProgress = Math.min((elapsedTime / TOTAL_TIME) * 100, 100);
+
+      setProgress(newProgress);
+
+      // Stop timer and clear refs when 15 minutes are complete
+      if (newProgress >= 100) {
+        clearInterval(progressTimerRef.current);
+        progressTimerRef.current = null;
+        progressStartTimeRef.current = null;
+        
+        // Remove local storage after 15 minutes
+        localStorage.removeItem(`order_progress_${orderId}`);
+      }
+    }, 1000);
+  };
+
+  // Main useEffect
   useEffect(() => {
     fetchOrderDetailsFromDB();
     const socket = connectWebSocket();
 
-    // Set up auto-refresh with slight randomization
     autoRefreshRef.current = setInterval(() => {
       fetchOrderDetailsFromDB();
     }, 2500 + Math.random() * 500);
 
-    // Cleanup function
     return () => {
-      if (socket) {
-        socket.disconnect();
-      }
-      if (autoRefreshRef.current) {
-        clearInterval(autoRefreshRef.current);
-      }
+      if (socket) socket.disconnect();
+      if (autoRefreshRef.current) clearInterval(autoRefreshRef.current);
+      if (progressTimerRef.current) clearInterval(progressTimerRef.current);
     };
   }, [fetchOrderDetailsFromDB, connectWebSocket]);
-
-  // Rest of the component remains the same as in previous implementation
-  // (render methods, error handling, etc.)
 
   // Loading state
   if (isLoading) {
@@ -216,7 +278,6 @@ const TrackOrder = () => {
       animate={{ opacity: 1, y: 0 }}
       className="track-order-container"
     >
-      {/* Existing render logic from previous implementation */}
       <div className="track-order-content">
         <div className="order-progress-header">
           <h1>Track Your Order</h1>
@@ -231,7 +292,7 @@ const TrackOrder = () => {
           <div
             className="progress-bar"
             style={{
-              width: `${progress}%`,
+              width: `${orderDetails.orderStatus?.toLowerCase() === 'pending' ? 0 : progress}%`,
               backgroundColor: progress === 100 ? '#4CAF50' : '#FFA500'
             }}
           ></div>
@@ -240,6 +301,7 @@ const TrackOrder = () => {
             <span>{`${Math.floor(progress)}%`}</span>
           </div>
         </div>
+
 
         {/* Order Stages */}
         <div className="order-stages">
@@ -264,7 +326,6 @@ const TrackOrder = () => {
             </motion.div>
           ))}
         </div>
-
         {/* Order Details Section */}
         <div className="order-details-section">
           <h2>Order Summary</h2>

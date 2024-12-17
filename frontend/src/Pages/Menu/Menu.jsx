@@ -15,7 +15,7 @@ const Menu = () => {
   const navigate = useNavigate();
 
   const handleGoToCart = () => {
-    navigate('/cart');
+    navigate('/checkout');
   };
 
   useEffect(() => {

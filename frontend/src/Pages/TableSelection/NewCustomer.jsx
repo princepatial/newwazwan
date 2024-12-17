@@ -103,7 +103,7 @@ const NewCustomer = () => {
                   onChange={handleMobileChange}
                 />
               </div>
-              <button className="submit-button" type="submit">
+              <button id="submit-button" type="submit">
                 Confirm Reservation
               </button>
             </form>

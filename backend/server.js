@@ -5,6 +5,7 @@ const { Server } = require('socket.io');
 const connectDB = require('./Config/db');
 const orderRoutes = require('./routes/orderRoutes');
 const errorHandler = require('./middleware/errorhandling');
+const feedbackRoutes = require('./routes/feedbackRoutes');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
@@ -35,6 +36,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/orders', orderRoutes);
+app.use('/feedback', feedbackRoutes);
 app.use(errorHandler);
 
 // Socket.io Namespace

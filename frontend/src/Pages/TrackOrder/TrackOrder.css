@@ -1,12 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
 :root {
   --bg-primary: #f4f6f9;
   --color-primary: #2c3e50;
   --color-secondary: #34495e;
-  --color-accent: #4CAF50;
+  --color-accent: #3498db;
+  --color-success: #2ecc71;
+  --color-warning: #f39c12;
   --color-border: #e0e6ed;
   --transition-speed: 0.3s;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--color-primary);
 }
 
 .track-order-container {
@@ -14,59 +22,62 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: var(--bg-primary);
-  font-family: 'Inter', sans-serif;
   padding: 2rem;
 }
 
 .track-order-content {
   background-color: white;
-  border-radius: 16px;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.1);
-  max-width: 700px;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  max-width: 800px;
   width: 100%;
-  padding: 2.5rem;
+  padding: 3rem;
   position: relative;
-  overflow: hidden;
 }
 
 .order-progress-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 .order-progress-header h1 {
   color: var(--color-primary);
   font-size: 2.5rem;
   margin-bottom: 0.5rem;
-}
-
-
-.back-button {
-  background:var(--color-accent);
-  border: none;
-  color: white;
-  font-size: 1rem;
-  padding: 8px 15px;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: transform 0.3s ease, background-color 0.3s ease;
-  position: absolute;
-  right: 0;
-  top: 0;
+  font-weight: 600;
 }
 
 .order-progress-header p {
   color: var(--color-secondary);
+  font-size: 1.1rem;
+}
+
+.back-button {
+  background: var(--color-accent);
+  border: none;
+  color: white;
   font-size: 1rem;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: absolute;
+  right: 2rem;
+  top: 2rem;
+}
+
+.back-button:hover {
+  background: darken(var(--color-accent), 10%);
+  transform: translateY(-2px);
+  color: black;
 }
 
 .progress-container {
   background-color: #f1f5f9;
-  border-radius: 10px;
-  height: 50px;
+  border-radius: 15px;
+  height: 60px;
   position: relative;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
   overflow: hidden;
 }
 
@@ -74,8 +85,8 @@
   position: absolute;
   height: 100%;
   background-color: var(--color-accent);
-  transition: width 0.5s ease;
-  border-radius: 10px;
+  transition: width 0.5s ease-in-out;
+  border-radius: 15px;
 }
 
 .progress-text {
@@ -83,60 +94,132 @@
   z-index: 1;
   display: flex;
   justify-content: space-between;
-  padding: 15px;
-  color: var(--color-primary);
+  align-items: center;
+  height: 100%;
+  padding: 0 20px;
+  color: white;
   font-weight: 600;
+  font-size: 1.1rem;
 }
 
 .order-stages {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  gap: 2rem;
+  margin-bottom: 3rem;
 }
 
 .stage {
   background-color: #f8f9fa;
-  border-radius: 12px;
-  padding: 1.5rem;
+  border-radius: 15px;
+  padding: 2rem;
   text-align: center;
-  border: 2px solid transparent;
   transition: all var(--transition-speed);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  opacity: 0.6;
 }
 
 .stage.completed {
   background-color: #e9f5e9;
-  border-color: var(--color-accent);
+  border-color: var(--color-success);
+  opacity: 1; 
 }
 
-.stage-emoji {
+.stage-icon {
   font-size: 3rem;
   margin-bottom: 1rem;
-  display: flex;
-  justify-content: center;
+  color: var(--color-accent);
 }
 
 .stage-details h3 {
   color: var(--color-primary);
   margin-bottom: 0.5rem;
+  font-size: 1.2rem;
 }
 
 .stage-details p {
   color: var(--color-secondary);
   font-size: 0.9rem;
-  margin-bottom: 0.5rem;
 }
 
-.time-range {
+.order-details-section {
+  background-color: #f8f9fa;
+  border-radius: 15px;
+  padding: 2rem;
+  margin-top: 3rem;
+}
+
+.order-details-section h2 {
+  color: var(--color-primary);
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+}
+
+.order-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-label {
   color: var(--color-secondary);
-  font-size: 0.8rem;
-  opacity: 0.7;
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
 }
 
-.chef-note {
-  text-align: center;
-  background-color: #f1f5f9;
+.detail-value {
+  color: var(--color-primary);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.order-items-section h3 {
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+}
+
+.order-items-section ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.order-items-section li {
+  background-color: white;
   padding: 1rem;
   border-radius: 10px;
-  color: var(--color-secondary);
+  margin-bottom: 0.5rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+}
+
+.order-items-section li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 768px) {
+  .track-order-content {
+    padding: 2rem;
+  }
+
+  .order-stages {
+    grid-template-columns: 1fr;
+  }
+
+  .order-details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .back-button {
+    position: static;
+    margin-top: 1rem;
+    width: 100%;
+  }
 }

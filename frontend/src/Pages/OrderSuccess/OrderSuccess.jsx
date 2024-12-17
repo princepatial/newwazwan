@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
-import { CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { CheckCircle, AlertCircle, Loader2, MessageSquare } from 'lucide-react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { motion, AnimatePresence } from 'framer-motion';
 import './OrderSuccess.css';
+
 
 const OrderSuccess = () => {
   const [orderDetails, setOrderDetails] = useState(null);
@@ -12,6 +14,16 @@ const OrderSuccess = () => {
   const [error, setError] = useState(null);
   const { orderId } = useParams();
   const [socket, setSocket] = useState(null);
+  const [showFeedbackPopup, setShowFeedbackPopup] = useState(true);
+  const navigate = useNavigate();
+
+
+  const handleFeedbackClick = () => {
+    navigate('/feedback', { state: { orderId: orderDetails.orderId } });
+  };
+
+
+
 
   const fetchOrderDetails = async () => {
     try {
@@ -30,12 +42,10 @@ const OrderSuccess = () => {
 
       const data = await response.json();
 
-      // Save to local storage only if status is accepted
       if (data.orderStatus === 'accepted') {
         localStorage.setItem('orderStatus', 'accepted');
         localStorage.setItem('orderId', data.orderId);
       } else {
-        // Remove from local storage if status is not accepted
         localStorage.removeItem('orderStatus');
         localStorage.removeItem('orderId');
       }
@@ -76,12 +86,10 @@ const OrderSuccess = () => {
     newSocket.on('orderDetails', (order) => {
       console.log("Received initial order details:", order);
 
-      // Save to local storage only if status is accepted
       if (order.orderStatus === 'accepted') {
         localStorage.setItem('orderStatus', 'accepted');
         localStorage.setItem('orderId', order.orderId);
       } else {
-        // Remove from local storage if status is not accepted
         localStorage.removeItem('orderStatus');
         localStorage.removeItem('orderId');
       }
@@ -94,12 +102,10 @@ const OrderSuccess = () => {
       console.log('Real-time order status update:', updatedOrder);
       updateOrderState(updatedOrder);
 
-      // Remove from local storage if status is not accepted
       if (updatedOrder.orderStatus !== 'accepted') {
         localStorage.removeItem('orderStatus');
         localStorage.removeItem('orderId');
       } else {
-        // Ensure it's saved when accepted
         localStorage.setItem('orderStatus', 'accepted');
         localStorage.setItem('orderId', updatedOrder.orderId);
       }
@@ -111,12 +117,9 @@ const OrderSuccess = () => {
       setIsLoading(false);
     });
 
-    // Set up interval to fetch order status every 2 seconds
     const statusInterval = setInterval(fetchOrderDetails, 2000);
 
-    // Cleanup function
     return () => {
-      // Clear the interval
       clearInterval(statusInterval);
 
       if (newSocket) {
@@ -129,7 +132,6 @@ const OrderSuccess = () => {
     };
   }, [orderId, socket]);
 
-  // Helper function to update order state consistently
   const updateOrderState = (order) => {
     setOrderDetails(prevDetails => ({
       orderId: order.orderId,
@@ -146,11 +148,11 @@ const OrderSuccess = () => {
   const getStatusStyle = (status) => {
     switch (status.toLowerCase()) {
       case 'pending':
-        return { color: '#FFA500', icon: <Loader2 size={64} color="#FFA500" /> };
+        return { color: '#FFA500', icon: <Loader2 size={64} color="#FFA500" className="animate-spin" /> };
       case 'accepted':
         return { color: '#4CAF50', icon: <CheckCircle size={64} color="#4CAF50" /> };
       case 'preparing':
-        return { color: '#2196F3', icon: <Loader2 size={64} color="#2196F3" /> };
+        return { color: '#2196F3', icon: <Loader2 size={64} color="#2196F3" className="animate-spin" /> };
       case 'ready':
         return { color: '#4CAF50', icon: <CheckCircle size={64} color="#4CAF50" /> };
       case 'delivered':
@@ -158,44 +160,81 @@ const OrderSuccess = () => {
       case 'rejected':
         return { color: 'red', icon: <AlertCircle size={64} color="red" /> };
       default:
-        return { color: '#FFA500', icon: <Loader2 size={64} color="#FFA500" /> };
+        return { color: '#FFA500', icon: <Loader2 size={64} color="#FFA500" className="animate-spin" /> };
     }
   };
 
   if (isLoading) {
     return (
-      <div className="order-loading">
+      <motion.div
+        className="order-loading"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
         <Loader2 size={64} className="animate-spin" />
         <p>Fetching your order details...</p>
-      </div>
+      </motion.div>
     );
   }
 
   if (error || !orderDetails) {
     return (
-      <div className="order-error">
+      <motion.div
+        className="order-error"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+      >
         <AlertCircle size={64} color="red" />
         <h2>Order Details Not Found</h2>
         <p>{error || 'Unable to retrieve order information.'}</p>
-        <Link to="/menu" className="action-button1">Back to Menu</Link>
-      </div>
+        <Link to="/menu" className="action-button">Back to Menu</Link>
+      </motion.div>
     );
   }
 
   const { color, icon } = getStatusStyle(orderDetails.orderStatus);
 
   return (
-    <div className="elegant-order-success">
-      <div className="order-success-content">
-        <div className="success-icon" style={{ color }}>
+    <motion.div
+      className="elegant-order-success"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <motion.div
+        className="order-success-content"
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.div
+          className="success-icon"
+          style={{ color }}
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.2, type: "spring", stiffness: 260, damping: 20 }}
+        >
           {icon}
-        </div>
+        </motion.div>
 
-        <h1 className="success-title" style={{ color }}>
+        <motion.h1
+          className="success-title"
+          style={{ color }}
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
           Order {orderDetails.orderStatus}
-        </h1>
+        </motion.h1>
 
-        <div className="order-details">
+        <motion.div
+          className="order-details"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.4 }}
+        >
           <div className="detail-grid">
             <div className="detail-item">
               <span className="detail-label">Order Number</span>
@@ -231,28 +270,62 @@ const OrderSuccess = () => {
             </div>
           </div>
 
-          <div className="order-items">
+          <motion.div
+            className="order-items"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
             <h3>Order Items:</h3>
             <ul>
               {orderDetails.items.map((item, index) => (
-                <li key={index}>
+                <motion.li
+                  key={index}
+                  initial={{ x: -20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.6 + index * 0.1 }}
+                >
                   {item.name} - Quantity: {item.quantity} - Price: ₹{item.price}
-                </li>
+                </motion.li>
               ))}
             </ul>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        <div className="order-actions">
-          <Link to="/menu" className="action-button1">Continue Browsing</Link>
-          <Link to={`/track-order/${orderDetails.orderId}`} className="action-button1 secondary">
+        <motion.div
+          className="order-actions"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.7 }}
+        >
+          <Link to="/menu" className="action-button primary">Continue Browsing</Link>
+          <Link to={`/track-order/${orderDetails.orderId}`} className="action-button secondary">
             Track Order
           </Link>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
+
+      <AnimatePresence>
+        {showFeedbackPopup && (
+          <motion.div
+            className="feedback-popup"
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          >
+            <div className="feedback-content" onClick={handleFeedbackClick}>
+              <MessageSquare size={24} color="#4CAF50" />
+              <h3>We Value Your Feedback!</h3>
+              <p>Help us improve by sharing your experience.</p>
+              <button className="feedback-button">Give Feedback</button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <ToastContainer />
-    </div>
+    </motion.div>
   );
 };
 

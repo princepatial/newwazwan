@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { MessageSquare } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import './Home.css';
 import Modal from './Modal';
 
@@ -6,6 +9,11 @@ const Home = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+
+  const handleFeedbackClick = () => {
+    navigate('/feedback');
+  };
 
   const luxuryDishes = [
     { name: 'Rogan Josh', description: 'Aromatic lamb curry infused with Kashmiri spices' },
@@ -36,23 +44,23 @@ const Home = () => {
 
   useEffect(() => {
     if (showModal) {
-        document.body.style.overflow = 'hidden'; 
+      document.body.style.overflow = 'hidden';
     } else {
-        document.body.style.overflow = 'auto';
+      document.body.style.overflow = 'auto';
     }
 
     return () => {
-        document.body.style.overflow = 'auto';
+      document.body.style.overflow = 'auto';
     };
-}, [showModal]);
+  }, [showModal]);
 
-const openModal = () => {
-  setShowModal(true);
-};
+  const openModal = () => {
+    setShowModal(true);
+  };
 
-const closeModal = () => {
-  setShowModal(false);
-};
+  const closeModal = () => {
+    setShowModal(false);
+  };
 
 
 
@@ -75,6 +83,7 @@ const closeModal = () => {
         <div className="lwh-hero-content">
           <h1 className="lwh-title">Wazwan Legacy</h1>
           <p className="lwh-subtitle">Experience the Royal Flavors of Kashmir</p>
+          <button className="lwh-cta-button" onClick={openModal}>Explore Our Menu</button>
           <div className="lwh-scroll-indicator"></div>
         </div>
       </header>
@@ -83,7 +92,7 @@ const closeModal = () => {
         <div className="lwh-experience-content">
           <h2 className="lwh-section-title">A Culinary Journey</h2>
           <p>Immerse yourself in the opulent world of Wazwan, where centuries-old recipes meet contemporary culinary artistry. Each dish is a masterpiece, crafted to transport you to the majestic valleys of Kashmir.</p>
-          <button className="lwh-cta-button" onClick={openModal}>Explore Our Menu</button>
+
         </div>
       </section>
 
@@ -140,6 +149,20 @@ const closeModal = () => {
           <button type="submit" className="lwh-submit-button">Secure Your Table</button>
         </form>
       </section>
+      <motion.div
+        className="feedback-popup"
+        initial={{ x: '100%' }}
+        animate={{ x: 0 }}
+        exit={{ x: '100%' }}
+        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+      >
+        <div className="feedback-content" onClick={handleFeedbackClick}>
+          <MessageSquare size={24} color="#4CAF50" />
+          <h3>We Value Your Feedback!</h3>
+          <p>Help us improve by sharing your experience.</p>
+          <button className="feedback-button">Give Feedback</button>
+        </div>
+      </motion.div>
       {showModal && <Modal onClose={closeModal} />}
     </div>
 

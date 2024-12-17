@@ -282,7 +282,7 @@ const Cart = () => {
                             onClick={handlePlaceOrder}
                         >
                             <CheckCircle size={20} />
-                            Place Order
+                            Place Order                             
                         </button>
                     </div>
                 </div>

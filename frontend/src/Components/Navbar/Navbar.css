@@ -13,7 +13,7 @@ body {
 }
 
 .navbar {
-    background: var(--primary-bg);
+    background: linear-gradient(135deg, #6e4c13, #9b6a28, #d6a34a); 
     color: var(--text-color);
     height: 100vh;
     width: 200px;
@@ -25,6 +25,8 @@ body {
     transition: width var(--transition-speed) ease;
     overflow: hidden;
 }
+
+
 
 .navbar.collapsed {
     width: 80px;
@@ -117,13 +119,13 @@ body {
 }
 
 .nav-link:hover {
-    background-color: var(--secondary-bg);
-    color:#3498db;
+    background-color: #9c640c;
+    color:#f5b041 ;
 }
 
 .nav-link.active {
     font-weight: 600;
-    color: var(--accent-color);
+    color: #d35400;
     background-color: rgba(231, 76, 60, 0.1);
 }
 

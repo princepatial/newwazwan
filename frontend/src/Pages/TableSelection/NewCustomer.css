@@ -94,7 +94,7 @@ input[type="tel"] {
   text-align: center;
 }
 
-.submit-button {
+#submit-button {
   width: 100%;
   padding: 12px;
   background: #8B4513;
@@ -106,7 +106,7 @@ input[type="tel"] {
   transition: background 0.3s ease;
 }
 
-.submit-button:hover {
+#submit-button:hover {
   background: #6B4226;
 }
 
