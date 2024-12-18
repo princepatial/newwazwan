@@ -1,37 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { useCart } from '../../Pages/Cart/CartContext'; 
-import logo from '../../assets/wazwan.svg' 
+import { useCart } from '../../Pages/Cart/CartContext';
+import logo from '../../assets/wazwan.svg'
 import './Navbar.css'
 
 
 const HomeIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-    <polyline points="9 22 9 12 15 12 15 22"></polyline>
-  </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+    </svg>
 );
 
 const MenuIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="3" y1="12" x2="21" y2="12"></line>
-    <line x1="3" y1="6" x2="21" y2="6"></line>
-    <line x1="3" y1="18" x2="21" y2="18"></line>
-  </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
 );
 
 const CartIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="9" cy="21" r="1"></circle>
-    <circle cx="20" cy="21" r="1"></circle>
-    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-  </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="9" cy="21" r="1"></circle>
+        <circle cx="20" cy="21" r="1"></circle>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+    </svg>
+);
+
+const OrdersIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+        <polyline points="14 2 14 8 20 8"></polyline>
+        <line x1="16" y1="13" x2="8" y2="13"></line>
+        <line x1="16" y1="17" x2="8" y2="17"></line>
+        <polyline points="10 9 9 9 8 9"></polyline>
+    </svg>
 );
 
 const Navbar = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isNavbarCollapsed, setIsNavbarCollapsed] = useState(false);
-    const { cartItemCount, clearCart } = useCart(); 
+    const { cartItemCount, clearCart } = useCart();
 
 
 
@@ -42,7 +52,7 @@ const Navbar = () => {
     const toggleMobileMenu = () => {
         const newMenuState = !isMobileMenuOpen;
         setIsMobileMenuOpen(newMenuState);
-    
+
         if (newMenuState) {
             document.body.style.position = 'fixed';
             document.body.style.top = `-${window.scrollY}px`;
@@ -56,14 +66,14 @@ const Navbar = () => {
             document.body.classList.remove('menu-open');
         }
     };
-    
+
     const closeMobileMenu = () => {
         if (isMobileMenuOpen) {
             const scrollY = document.body.style.top;
             document.body.style.position = '';
             document.body.style.top = '';
             window.scrollTo(0, parseInt(scrollY || '0') * -1);
-            
+
             setIsMobileMenuOpen(false);
             document.body.classList.remove('menu-open');
         }
@@ -77,18 +87,18 @@ const Navbar = () => {
 
             <div className="container vertical-container">
                 <div className="logo-section vertical-logo-section">
-                    <img 
-                        src={logo} 
-                        alt="Restaurant Logo" 
-                        className="logo-image vertical-logo" 
+                    <img
+                        src={logo}
+                        alt="Restaurant Logo"
+                        className="logo-image vertical-logo"
                     />
                 </div>
 
                 <ul className={`nav-links vertical-nav-links ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
                     <li onClick={closeMobileMenu}>
-                        <NavLink 
-                            to="/" 
-                            className={({ isActive }) => 
+                        <NavLink
+                            to="/"
+                            className={({ isActive }) =>
                                 `nav-link ${isActive ? 'active' : ''}`
                             }
                         >
@@ -97,9 +107,9 @@ const Navbar = () => {
                         </NavLink>
                     </li>
                     <li onClick={closeMobileMenu}>
-                        <NavLink 
-                            to="/menu" 
-                            className={({ isActive }) => 
+                        <NavLink
+                            to="/menu"
+                            className={({ isActive }) =>
                                 `nav-link ${isActive ? 'active' : ''}`
                             }
                         >
@@ -108,9 +118,9 @@ const Navbar = () => {
                         </NavLink>
                     </li>
                     <li onClick={closeMobileMenu}>
-                        <NavLink 
-                            to="/checkout" 
-                            className={({ isActive }) => 
+                        <NavLink
+                            to="/checkout"
+                            className={({ isActive }) =>
                                 `nav-link ${isActive ? 'active' : ''}`
                             }
                         >

@@ -53,20 +53,29 @@ const RegularCustomer = () => {
 
         <div className="rc-reservation-container">
           <div className="rc-table-selection">
-            <h2>Select Your Table</h2>
+            <h2>Select Your Table <span className="mandatory">*</span> 
+               </h2>
             {loading ? (
               <div className="rc-loading-spinner"></div>
             ) : (
               <div className="rc-tables-grid">
                 {tables.map((table) => (
-                  <button
-                    key={table._id}
-                    className={`rc-table-button ${selectedTable === table.name ? 'selected' : ''} ${table.status}`}
-                    onClick={() => handleTableClick(table.name)}
-                    disabled={table.status !== 'available'}
-                  >
-                    {table.name}
-                  </button>
+                 <button
+                 key={table._id}
+                 className={`table-button ${
+                   selectedTable === table.name ? 'selected' : ''
+                 } ${table.status}`}
+                 onClick={() => handleTableClick(table.name)}
+                 disabled={table.status !== 'available'}
+                 style={{
+                   backgroundColor: table.status === 'unavailable' ? '#d3d3d3' : '', 
+                   cursor: table.status !== 'available' ? 'not-allowed' : 'pointer',
+                   border: table.status === 'unavailable' ? '2px solid red' : '',
+                   opacity: table.status === 'unavailable' ? 0.5 : 1,
+                 }}
+               >
+                 {table.name}
+               </button>
                 ))}
               </div>
             )}

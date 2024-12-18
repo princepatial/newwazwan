@@ -120,6 +120,13 @@ input[type="tel"] {
   margin: 20px auto;
 }
 
+.mandatory {
+  color: red;
+  margin-left: 5px;
+  font-weight: bold;
+}
+
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }

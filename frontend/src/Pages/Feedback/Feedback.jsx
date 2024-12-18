@@ -1,153 +1,255 @@
 import React, { useState } from 'react';
-import axios from 'axios'; // Import axios
-import { FaGoogle, FaStar, FaUtensils, FaConciergeBell, FaSmile, FaMapMarkerAlt } from 'react-icons/fa';
+import { 
+  FaStar, 
+  FaUtensils, 
+  FaConciergeBell, 
+  FaSmile, 
+  FaMapMarkerAlt, 
+  FaQrcode, 
+  FaComment,
+  FaDownload,
+  FaArrowLeft,
+  FaTimes
+} from 'react-icons/fa';
+import axios from 'axios';
 import './Feedback.css';
 
-const Feedback = () => {
+const RestaurantFeedback = () => {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [feedbackType, setFeedbackType] = useState(null);
   const [ratings, setRatings] = useState({
     food: 0,
     service: 0,
     ambiance: 0,
-    overall: 0
+    overall: 0,
   });
   const [comment, setComment] = useState('');
+  const [message, setMessage] = useState({
+    text: '',
+    type: '' // 'success' or 'error'
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const locations = ['Kharar', 'Mohali', 'Chandigarh'];
 
-  const googleReviewLinks = {
-    Kharar: 'https://www.google.com/search?q=wazwan+legacy#lrd=0x390ffb001a87a99d:0x7d78bd36ffc81752,3,,,,&rlimm=9041184295863457618',
-    Mohali: 'https://g.page/r/CY1XhvbX_ZEMEAE/review',
-    Chandigarh: 'https://www.google.com/search?q=wazwan+legacy#lrd=0x390fed2614a30275:0x9c9f2355bdb12f01,3,,,,&rlimm=11285778042375450369',
-    default: 'https://www.google.com/search?q=wazwan+legacy#lrd=0x390ffb001a87a99d:0x7d78bd36ffc81752,1,,,,'
+  // Updated SVG paths using src/assets
+  const locationQRs = {
+    Kharar: '/src/assets/kharar.svg',
+    Mohali: '/src/assets/kharar.svg',
+    Chandigarh: '/src/assets/Chandigrah.svg'
   };
 
   const handleLocationSelect = (location) => {
     setSelectedLocation(location);
+    setFeedbackType('google');
   };
 
-  const handleFeedbackTypeChange = (type) => {
-    setFeedbackType(type);
+  const handleGoBack = () => {
+    // Reset to location selection
+    setSelectedLocation(null);
+    setFeedbackType(null);
+    setMessage({ text: '', type: '' });
   };
 
-  const handleRatingChange = (category, value) => {
-    setRatings(prev => ({ ...prev, [category]: value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const feedbackData = {
-      location: selectedLocation,
-      ratings: ratings,
-      comment: comment,
-    };
-
-    try {
-      // Make a POST request to your backend API
-      await axios.post('http://localhost:5000/feedback', feedbackData);
-      alert('Feedback submitted successfully!');
-      // Reset the form
-      setSelectedLocation(null);
-      setFeedbackType(null);
-      setRatings({ food: 0, service: 0, ambiance: 0, overall: 0 });
-      setComment('');
-    } catch (error) {
-      console.error('Error submitting feedback:', error);
-      alert('There was an error submitting your feedback. Please try again.');
-    }
-  };
-
-  const navigateToGoogleReview = () => {
-    const reviewLink = googleReviewLinks[selectedLocation] || googleReviewLinks.default;
-    window.open(reviewLink, '_blank');
+  const handleResetLocation = () => {
+    // Reset only the location, keeping feedback type
+    setSelectedLocation(null);
+    setMessage({ text: '', type: '' });
   };
 
   const renderStars = (category) => {
     return [...Array(5)].map((_, index) => (
       <FaStar
         key={index}
-        className={index < ratings[category] ? 'star active' : 'star'}
-        onClick={() => handleRatingChange(category, index + 1)}
+        className={`rf-star-rating ${index < ratings[category] ? 'active' : ''}`}
+        onClick={() => setRatings((prev) => ({ ...prev, [category]: index + 1 }))}
       />
     ));
   };
 
+  const handleDownloadQR = () => {
+    if (selectedLocation) {
+      const link = document.createElement('a');
+      link.href = locationQRs[selectedLocation];
+      link.download = `${selectedLocation}_QR_Code.svg`;
+      link.click();
+    }
+  };
+
+  const handleSubmitFeedback = async (e) => {
+    e.preventDefault();
+    
+
+    axios.defaults.baseURL = 'http://localhost:5000';
+    
+    try {
+      const response = await axios.post('/feedback', {
+        location: selectedLocation,
+        ratings: ratings,
+        comment: comment,
+        feedbackType: feedbackType
+      });
+      
+      setMessage({
+        text: 'Feedback submitted successfully!',
+        type: 'success'
+      });
+      setTimeout(() => {
+        setMessage({ text: '', type: '' });
+      }, 2000);
+  
+  
+      // Reset form
+      setRatings({
+        food: 0,
+        service: 0,
+        ambiance: 0,
+        overall: 0,
+      });
+      setComment('');
+    } catch (error) {
+      setMessage({
+        text: 'Failed to submit feedback',
+        type: 'error'
+      });
+      setTimeout(() => {
+        setMessage({ text: '', type: '' });
+      }, 2000);
+    }
+  };
+
   return (
-    <div className="feedback-container">
-      <h1>Your Opinion Matters</h1>
-      {!selectedLocation ? (
-        <>
-          <p>Please select your restaurant location:</p>
-          <div className="location-options">
-            {locations.map((location) => (
-              <button
-                key={location}
-                className="location-option"
-                onClick={() => handleLocationSelect(location)}
+    <div className="rf-feedback-wrapper">
+      <div className="rf-feedback-container">
+        {selectedLocation && (
+          <div className="rf-navigation-buttons">
+            <button 
+              className="rf-back-button" 
+              onClick={handleGoBack}
+            >
+              <FaArrowLeft /> Back to Locations
+            </button>
+            <button 
+              className="rf-reset-location-button" 
+              onClick={handleResetLocation}
+            >
+              <FaTimes /> Change Location
+            </button>
+          </div>
+        )}
+
+        <div className="rf-feedback-header">
+          <h1>Restaurant Feedback</h1>
+          <p>Your opinion helps us improve</p>
+        </div>
+
+        {message.text && (
+          <div 
+            className={`rf-message ${message.type === 'success' ? 'rf-success' : 'rf-error'}`}
+          >
+            {message.text}
+          </div>
+        )}
+
+        {!selectedLocation ? (
+          <div className="rf-location-selection">
+            <h2>Choose Your Location</h2>
+            <div className="rf-location-grid">
+              {locations.map((location) => (
+                <div 
+                  key={location} 
+                  className="rf-location-card"
+                  onClick={() => handleLocationSelect(location)}
+                >
+                  <FaMapMarkerAlt className="rf-location-icon" /> <br />
+                  <span>{location}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="rf-feedback-content">
+            <h2>{selectedLocation} Restaurant</h2>
+
+            <div className="rf-feedback-toggle">
+              <button 
+                className={`rf-toggle-btn ${feedbackType === 'google' ? 'active' : ''}`}
+                onClick={() => setFeedbackType('google')}
               >
-                <FaMapMarkerAlt /> {location}
+                <FaQrcode /> Google Review
               </button>
-            ))}
-          </div>
-        </>
-      ) : (
-        <>
-          <p>How was your experience at our {selectedLocation} restaurant?</p>
-          <div className="feedback-options">
-            <button
-              className={`feedback-option ${feedbackType === 'google' ? 'active' : ''}`}
-              onClick={() => {
-                handleFeedbackTypeChange('google');
-                navigateToGoogleReview();
-              }}
-            >
-              <FaGoogle /> Rate Us on Google
-            </button>
-            <button
-              className={`feedback-option ${feedbackType === 'experience' ? 'active' : ''}`}
-              onClick={() => handleFeedbackTypeChange('experience')}
-            >
-              <FaSmile /> Share Your Experience
-            </button>
-          </div>
+              <button 
+                className={`rf-toggle-btn ${feedbackType === 'experience' ? 'active' : ''}`}
+                onClick={() => setFeedbackType('experience')}
+              >
+                <FaComment /> Share Experience
+              </button>
+            </div>
 
-          {feedbackType === 'experience' && (
-            <form onSubmit={handleSubmit} className="experience-form">
-              <div className="rating-section">
-                <div className="rating-item">
-                  <label><FaUtensils /> Food Quality</label>
-                  <div className="stars">{renderStars('food')}</div>
+            {feedbackType === 'google' && (
+              <div className="rf-qr-section">
+                <div className="rf-qr-container">
+                  <img 
+                    src={locationQRs[selectedLocation]} 
+                    alt={`${selectedLocation} QR Code`} 
+                    className="rf-qr-image"
+                  />
+                  <button 
+                    className="rf-download-qr-btn"
+                    onClick={handleDownloadQR}
+                  >
+                    <FaDownload /> Download QR
+                  </button>
                 </div>
-                <div className="rating-item">
-                  <label><FaConciergeBell /> Service</label>
-                  <div className="stars">{renderStars('service')}</div>
-                </div>
-                <div className="rating-item">
-                  <label><FaSmile /> Ambiance</label>
-                  <div className="stars">{renderStars('ambiance')}</div>
-                </div>
-                <div className="rating-item">
-                  <label>Overall Experience</label>
-                  <div className="stars">{renderStars('overall')}</div>
-                </div>
+                <p>Scan or download this QR code to leave a Google Review</p>
               </div>
+            )}
 
-              <textarea
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                placeholder="We'd love to hear more about your experience..."
-                required
-              />
+            {feedbackType === 'experience' && (
+              <form 
+                className="rf-experience-form"
+                onSubmit={handleSubmitFeedback}
+              >
+                <div className="rf-rating-grid">
+                  <div className="rf-rating-item">
+                    <label><FaUtensils /> Food Quality</label>
+                    <div className="rf-star-container">{renderStars('food')}</div>
+                  </div>
+                  <div className="rf-rating-item">
+                    <label><FaConciergeBell /> Service</label>
+                    <div className="rf-star-container">{renderStars('service')}</div>
+                  </div>
+                  <div className="rf-rating-item">
+                    <label><FaSmile /> Ambiance</label>
+                    <div className="rf-star-container">{renderStars('ambiance')}</div>
+                  </div>
+                  <div className="rf-rating-item">
+                    <label>Overall Experience</label>
+                    <div className="rf-star-container">{renderStars('overall')}</div>
+                  </div>
+                </div>
 
-              <button type="submit" className="submit-button">Submit Feedback</button>
-            </form>
-          )}
-        </>
-      )}
+                <textarea
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  placeholder="Share the details of your experience..."
+                  required
+                />
+
+                <button 
+                  type="submit" 
+                  className="rf-submit-feedback-btn"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Submitting...' : 'Submit Feedback'}
+                </button>
+              </form>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
 
-export default Feedback;
+export default RestaurantFeedback;

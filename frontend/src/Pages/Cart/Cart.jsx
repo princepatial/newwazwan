@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import io from 'socket.io-client';
 import { useCart } from './CartContext';
 import {
     ShoppingCart,
@@ -9,15 +8,13 @@ import {
     Plus,
     Trash2,
     CheckCircle,
-    User,
-    MapPin
+    User
 } from 'lucide-react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Cart.css';
 
 const Cart = () => {
-    // Update destructuring to match new CartContext structure
     const {
         cart: cartItems,
         removeFromCart,
@@ -27,16 +24,7 @@ const Cart = () => {
 
     const [isModalOpen, setModalOpen] = useState(false);
     const [userName, setUserName] = useState('');
-    const [userAddress, setUserAddress] = useState('');
     const navigate = useNavigate();
-    const [mobileNumber, setMobileNumber] = useState('');
-
-
-
-    const handleMobileChange = (e) => {
-        setMobileNumber(e.target.value);  // Update state when the user enters the mobile number
-    };
-
 
     useEffect(() => {
         const handleLoginStatusChange = () => {
@@ -55,62 +43,45 @@ const Cart = () => {
         setModalOpen(true);
     };
 
-   
-
     const handlePlaceOrder = async () => {
-        // Validate name
-        if (!userName.trim()) {
+        const selectedTable = localStorage.getItem('selectedTable');
+        const mobileNumber = localStorage.getItem('mobileNumber');
+
+        // If mobile number is found, name is required.
+        if (mobileNumber && !userName.trim()) {
             toast.error('Please enter your name to place the order.');
             return;
         }
-    
-        const selectedTable = localStorage.getItem('selectedTable');
-        
-        // Determine mobile number prioritizing localStorage, then manual input
-        const finalMobileNumber = localStorage.getItem('mobileNumber') || mobileNumber;
-    
-        // Validation for mobile number
-        if (!finalMobileNumber) {
-            toast.error('Please enter a mobile number.');
-            return;
-        }
-    
-        // Validate table number
+
+        // If no mobile number is found, allow order placement without name.
         if (!selectedTable) {
             toast.error('Table number is missing!');
             return;
         }
-    
-        // Prepare order items with required fields
-        const orderItems = cartItems.map(item => ({
+
+        const orderItems = cartItems.map((item) => ({
             id: item.id,
             name: item.name,
             price: item.price,
             quantity: item.quantity
         }));
-    
+
         try {
             const response = await axios.post('http://localhost:5000/orders/checkout', {
                 items: orderItems,
                 selectedTable,
-                mobileNumber: finalMobileNumber,
-                userName,
-                userAddress: userAddress || '', 
+                mobileNumber: mobileNumber || '', // Allow empty mobile number
+                userName: mobileNumber ? userName : '', // Only require name if mobile number is present
+                totalAmount: cartTotal
             });
-    
+
             if (response.data.success) {
                 const { orderId } = response.data;
 
                 toast.success('Order placed successfully!');
-
                 localStorage.removeItem('selectedTable');
                 localStorage.removeItem('mobileNumber');
-    
-
                 navigate(`/order-success/${orderId}`);
-
-    
-            
                 clearCart();
                 setModalOpen(false);
             } else {
@@ -122,11 +93,10 @@ const Cart = () => {
         }
     };
 
+    const cartTotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    const gst = cartTotal * 0.05; // 5% GST
+    const finalAmount = cartTotal + gst; // Total with GST
 
-   
-    const cartTotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
-
-  
     if (cartItems.length === 0) {
         return (
             <div className="cart-container-empty">
@@ -196,8 +166,18 @@ const Cart = () => {
 
             <div className="cart-summary-modern">
                 <div className="summary-details">
-                    <span>Total</span>
-                    <h3>₹{cartTotal.toFixed(2)}</h3>
+                    <div className="summary-row">
+                        <span>Subtotal</span>
+                        <h3>₹{cartTotal.toFixed(2)}</h3>
+                    </div>
+                    <div className="summary-row">
+                        <span>GST (5%)</span>
+                        <h3>₹{gst.toFixed(2)}</h3>
+                    </div>
+                    <div className="summary-row total-row">
+                        <span>Total Amount</span>
+                        <h3 className="total-with-gst">₹{finalAmount.toFixed(2)}</h3>
+                    </div>
                 </div>
                 <button
                     className="checkout-btn-modern"
@@ -240,49 +220,42 @@ const Cart = () => {
                             ))}
                         </div>
 
-                        <div className="modal-input-section">
-                            <div className="input-wrapper">
-                                <User size={20} className="input-icon" />
-                                <input
-                                    type="text"
-                                    placeholder="Your Name"
-                                    value={userName}
-                                    onChange={(e) => setUserName(e.target.value)}
-                                    required
-                                />
+                        <div className="modal-total-section">
+                            <div className="summary-row">
+                                <span>Subtotal</span>
+                                <h3>₹{cartTotal.toFixed(2)}</h3>
                             </div>
-                            <div className="input-wrapper">
-                                <MapPin size={20} className="input-icon" />
-                                {!localStorage.getItem('mobileNumber') ? (
-                                    <input
-                                        type="text"
-                                        placeholder="Phone Number"
-                                        value={mobileNumber}
-                                        onChange={handleMobileChange}
-                                        required
-                                    />
-                                ) : (
-                                    <input
-                                        type="text"
-                                        placeholder="Address (Optional)"
-                                        value={userAddress}
-                                        onChange={(e) => setUserAddress(e.target.value)}
-                                    />
-                                )}
+                            <div className="summary-row">
+                                <span>GST (5%)</span>
+                                <h3>₹{gst.toFixed(2)}</h3>
+                            </div>
+                            <div className="summary-row total-row">
+                                <span>Total Amount</span>
+                                <h3 className="total-with-gst">₹{finalAmount.toFixed(2)}</h3>
                             </div>
                         </div>
 
-                        <div className="modal-total-section">
-                            <span>Total Amount</span>
-                            <h3>₹{cartTotal.toFixed(2)}</h3>
-                        </div>
+                        {localStorage.getItem('mobileNumber') && (
+                            <div className="modal-input-section">
+                                <div className="input-wrapper">
+                                    <User size={20} className="input-icon" />
+                                    <input
+                                        type="text"
+                                        placeholder="Your Name *"
+                                        value={userName}
+                                        onChange={(e) => setUserName(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                            </div>
+                        )}
 
                         <button
                             className="place-order-btn"
                             onClick={handlePlaceOrder}
                         >
                             <CheckCircle size={20} />
-                            Place Order                             
+                            Place Order
                         </button>
                     </div>
                 </div>

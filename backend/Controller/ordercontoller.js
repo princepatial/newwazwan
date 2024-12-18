@@ -1,42 +1,44 @@
 const Order = require('../models/order');
 
-
 exports.checkout = async (req, res) => {
-  const { items, selectedTable, mobileNumber, userName, userAddress } = req.body;
+    const { items, selectedTable, mobileNumber, userName, userAddress } = req.body;
 
+    if (!items || items.length === 0) {
+        return res.status(400).json({ success: false, message: 'Cart is empty' });
+    }
+    if (!selectedTable) {
+        return res.status(400).json({ success: false, message: 'Table number is missing' });
+    }
 
-  if (!items || items.length === 0) {
-    return res.status(400).json({ success: false, message: 'Cart is empty' });
-  }
-  if (!selectedTable || !mobileNumber || !userName) {
-    return res.status(400).json({ success: false, message: 'Required fields are missing' });
-  }
+    // If mobileNumber is provided, userName is required
+    if (mobileNumber && !userName) {
+        return res.status(400).json({ success: false, message: 'User name is required when mobile number is provided' });
+    }
 
-  try {
+    try {
+        const order = await Order.create({
+            items,
+            selectedTable,
+            mobileNumber: mobileNumber || null, // Allow empty mobile number
+            userName: mobileNumber ? userName : null, // Only require name if mobile number is present
+            userAddress: userAddress || null, // Allow empty user address
+            orderStatus: 'pending',
+        });
 
-    const order = await Order.create({
-      items,
-      selectedTable,
-      mobileNumber,
-      userName,
-      userAddress,
-      orderStatus: 'pending',
-    });
-
-    return res.status(201).json({
-      success: true,
-      message: 'Order placed successfully',
-       orderId: order.orderId,
-      order,
-    });
-  } catch (error) {
-    console.error('Checkout error:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Failed to place the order',
-      error: error.message,
-    });
-  }
+        return res.status(201).json({
+            success: true,
+            message: 'Order placed successfully',
+            orderId: order.orderId,
+            order,
+        });
+    } catch (error) {
+        console.error('Checkout error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to place the order',
+            error: error.message,
+        });
+    }
 };
 
 

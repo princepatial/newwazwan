@@ -17,7 +17,9 @@ const NewCustomer = () => {
       try {
         const response = await axios.get('http://51.20.97.10/api/tables');
         if (response.status === 200) {
-          const sortedTables = response.data.tables.sort((a, b) => a.name.localeCompare(b.name));
+          const sortedTables = response.data.tables.sort((a, b) =>
+            a.name.localeCompare(b.name)
+          );
           setTables(sortedTables);
         } else {
           throw new Error('Failed to fetch tables');
@@ -69,10 +71,12 @@ const NewCustomer = () => {
           <h1>Welcome to Wazwan Legacy</h1>
           <p>Embark on a Culinary Journey</p>
         </header>
-        
+
         <div className="reservation-container">
           <div className="table-selection">
-            <h2>Select Your Table</h2>
+            <h2>
+              Select Your Table <span className="mandatory">*</span>
+            </h2>
             {loading ? (
               <div className="loading-spinner"></div>
             ) : (
@@ -80,9 +84,17 @@ const NewCustomer = () => {
                 {tables.map((table) => (
                   <button
                     key={table._id}
-                    className={`table-button ${selectedTable === table.name ? 'selected' : ''} ${table.status}`}
+                    className={`table-button ${
+                      selectedTable === table.name ? 'selected' : ''
+                    } ${table.status}`}
                     onClick={() => handleTableClick(table.name)}
                     disabled={table.status !== 'available'}
+                    style={{
+                      backgroundColor: table.status === 'unavailable' ? '#d3d3d3' : '', 
+                      cursor: table.status !== 'available' ? 'not-allowed' : 'pointer',
+                      border: table.status === 'unavailable' ? '2px solid red' : '',
+                      opacity: table.status === 'unavailable' ? 0.5 : 1,
+                    }}
                   >
                     {table.name}
                   </button>
@@ -92,7 +104,9 @@ const NewCustomer = () => {
           </div>
 
           <div className="mobile-input-section">
-            <h2>Your Contact</h2>
+            <h2>
+              Your Contact <span className="mandatory">*</span>
+            </h2>
             <form onSubmit={handleSubmit}>
               <div className="input-group">
                 <input
@@ -110,7 +124,11 @@ const NewCustomer = () => {
           </div>
         </div>
       </div>
-      <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} />
+      <ToastContainer
+        position="bottom-right"
+        autoClose={3000}
+        hideProgressBar={false}
+      />
     </div>
   );
 };

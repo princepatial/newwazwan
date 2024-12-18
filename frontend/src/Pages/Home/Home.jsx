@@ -150,20 +150,18 @@ const Home = () => {
         </form>
       </section>
       <motion.div
-        className="feedback-popup"
+        className="feedback-button-container"
         initial={{ x: '100%' }}
         animate={{ x: 0 }}
         exit={{ x: '100%' }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       >
-        <div className="feedback-content" onClick={handleFeedbackClick}>
+        <button className="feedback-icon-button" onClick={handleFeedbackClick}>
           <MessageSquare size={24} color="#4CAF50" />
-          <h3>We Value Your Feedback!</h3>
-          <p>Help us improve by sharing your experience.</p>
-          <button className="feedback-button">Give Feedback</button>
-        </div>
+        </button>
       </motion.div>
       {showModal && <Modal onClose={closeModal} />}
+
     </div>
 
 

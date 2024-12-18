@@ -51,6 +51,18 @@ const Modal = ({ onClose }) => {
             <button onClick={handleRegularCustomerClick}>View Favorites</button>
           </div>
         </div>
+
+        {/* New Offers Section */}
+        <div className="offers-section">
+          <div className="offer-card">
+            <h3>🎉 10% Off for First-Time Guests!</h3>
+            <p>Enjoy your first order with an exclusive 10% discount. Let’s make your first visit memorable!</p>
+          </div>
+          <div className="offer-card">
+            <h3>🍹 Complimentary Welcome Drink</h3>
+            <p>Kickstart your meal with a refreshing drink, on the house. Cheers to great food and good times!</p>
+          </div>
+        </div>
       </div>
     </div>
   );

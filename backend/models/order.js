@@ -11,8 +11,8 @@ const orderSchema = new mongoose.Schema({
     },
   ],
   selectedTable: { type: String, required: true },
-  mobileNumber: { type: String, required: true },
-  userName: { type: String, required: true },
+  mobileNumber: { type: String, required: false },
+  userName: { type: String, required: false },
   userAddress: { type: String },
   orderStatus: {
     type: String,
