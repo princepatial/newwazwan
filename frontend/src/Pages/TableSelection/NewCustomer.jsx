@@ -15,7 +15,7 @@ const NewCustomer = () => {
   useEffect(() => {
     const fetchTables = async () => {
       try {
-        const response = await axios.get('http://51.20.97.10/api/tables');
+        const response = await axios.get('http://localhost:5000/api/tables');
         if (response.status === 200) {
           const sortedTables = response.data.tables.sort((a, b) =>
             a.name.localeCompare(b.name)
@@ -44,7 +44,7 @@ const NewCustomer = () => {
     setMobileNumber(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!selectedTable) {
@@ -57,11 +57,26 @@ const NewCustomer = () => {
       return;
     }
 
-    localStorage.setItem('selectedTable', selectedTable);
-    localStorage.setItem('mobileNumber', mobileNumber);
+    try {
+      const response = await axios.get('http://localhost:5000/orders');
+      if (response.status === 200) {
+        const existingNumbers = response.data.orders.map((order) => order.mobileNumber);
+        if (existingNumbers.includes(mobileNumber)) {
+          toast.error('You are a regular customer. Please try with a new number!');
+        } else {
+          localStorage.setItem('selectedTable', selectedTable);
+          localStorage.setItem('mobileNumber', mobileNumber);
 
-    toast.success('Details submitted successfully!');
-    setTimeout(() => navigate('/menu'), 1000);
+          toast.success('Details submitted successfully!');
+          setTimeout(() => navigate('/menu'), 1000);
+        }
+      } else {
+        throw new Error('Failed to fetch orders');
+      }
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      toast.error('Unable to validate mobile number. Please try again later.');
+    }
   };
 
   return (

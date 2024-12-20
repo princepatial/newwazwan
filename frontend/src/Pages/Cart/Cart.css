@@ -311,6 +311,140 @@ body {
     background-color: #059669;
 }
 
+.cart-page-container {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 40px auto;
+    gap: 30px;
+    padding: 0 20px;
+}
+
+.cart-main-content {
+    flex: 1;
+}
+
+.suggested-items-sidebar {
+    width: 280px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+}
+
+.suggested-items-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.suggested-items-header {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.suggested-items-header h3 {
+    color: #2d3748;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.suggested-items-header p {
+    color: #718096;
+    font-size: 0.85rem;
+}
+
+.suggested-items-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+.suggested-item-card {
+    background-color: #f8fafc;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+}
+
+.suggested-item-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.suggested-item-image-wrapper {
+    width: 80px;
+    height: 80px;
+    overflow: hidden;
+}
+
+.suggested-item-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.suggested-item-card:hover .suggested-item-image {
+    transform: scale(1.05);
+}
+
+.suggested-item-details {
+    padding: 10px;
+    flex: 1;
+}
+
+.suggested-item-details h4 {
+    margin: 0 0 5px;
+    font-size: 0.9rem;
+    color: #2d3748;
+    font-weight: 600;
+}
+
+.suggested-item-price {
+    font-weight: 700;
+    color: #4a5568;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+.suggested-item-add-btn {
+    width: 100%;
+    padding: 8px;
+    background-color: #4299e1;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.suggested-item-add-btn:hover {
+    background-color: #3182ce;
+}
+
+.suggested-items-loading {
+    text-align: center;
+    color: #718096;
+    padding: 20px;
+    font-size: 0.9rem;
+}
+
+
+
+
 /* Responsive styles */
 @media (max-width: 768px) {
     .cart-container {

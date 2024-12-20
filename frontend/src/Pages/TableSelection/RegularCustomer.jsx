@@ -15,7 +15,7 @@ const RegularCustomer = () => {
   useEffect(() => {
     const fetchTables = async () => {
       try {
-        const response = await axios.get('http://51.20.97.10/api/tables');
+        const response = await axios.get('http://localhost:5000/api/tables');
         if (response.status === 200) {
           const sortedTables = response.data.tables.sort((a, b) => a.name.localeCompare(b.name));
           setTables(sortedTables);

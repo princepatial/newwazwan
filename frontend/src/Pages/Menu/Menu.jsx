@@ -135,7 +135,7 @@ const Menu = () => {
               </div>
               <div className="item-details">
                 <h3 className="item-name">{item.itemName}</h3>
-                <p className="item-price">₹{item.sellPrice}</p>
+                <p className="item-price1">₹{item.sellPrice}</p>
                 {currentQuantity > 0 ? (
                   <div className="quantity-control">
                     <button

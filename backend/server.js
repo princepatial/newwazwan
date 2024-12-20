@@ -37,6 +37,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/orders', orderRoutes);
 app.use('/feedback', feedbackRoutes);
+app.use('/api/tables', require('./routes/tableRoute'));
 app.use(errorHandler);
 
 // Socket.io Namespace
