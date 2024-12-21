@@ -101,8 +101,35 @@
   100% { transform: rotate(360deg); }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) and (min-width: 768px) {
+  .rc-content-wrapper {
+    padding: 30px;
+    max-width: 700px;
+  }
+
+  .rc-page-header h1 {
+    font-size: 2.2rem;
+  }
+
+  .rc-page-header p {
+    font-size: 1.1rem;
+  }
+
   .rc-reservation-container {
-    flex-direction: column;
+    gap: 30px;
+  }
+
+  .rc-table-selection h2 {
+    font-size: 1.6rem;
+  }
+
+  .rc-tables-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 20px;
+  }
+
+  .rc-table-button {
+    padding: 12px;
+    font-size: 0.9rem;
   }
 }

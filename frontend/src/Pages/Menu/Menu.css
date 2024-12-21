@@ -192,23 +192,88 @@ body {
   box-shadow: 0 8px 20px rgba(233, 69, 96, 0.6);
 }
 
-@media (max-width: 768px) {
+
+
+/* Media Query for Screen Sizes between 768px and 1024px */
+@media (max-width: 1024px) and (min-width: 768px) {
+  /* Adjust the menu title font size */
   .menu-title {
-    font-size: 3rem;
+    font-size: 3.5rem;
   }
-  
+
+  /* Adjust the menu subtitle font size */
   .menu-subtitle {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
-  
+
+  /* Make the filter buttons more compact */
+  .filter-buttons {
+    gap: 10px;
+  }
+
+  .filter-button {
+    font-size: 0.9rem;
+    padding: 10px 20px;
+  }
+
+  /* Adjust the menu items grid */
   .menu-items {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
   }
-  
+
+  /* Adjust the item image size */
+  .item-image-container {
+    height: 220px;
+  }
+
+  .item-image {
+    object-fit: cover;
+  }
+
+  /* Adjust item details padding */
+  .item-details {
+    padding: 20px;
+  }
+
+  /* Adjust the item name font size */
+  .item-name {
+    font-size: 1.4rem;
+  }
+
+  /* Adjust the item price font size */
+  .item-price1 {
+    font-size: 1.3rem;
+  }
+
+  /* Adjust add to cart button */
+  .add-to-cart, .quantity-control {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+
+  .quantity-display {
+    font-size: 1rem;
+  }
+
+  /* Adjust the go to cart button */
   .go-to-cart-button {
-    bottom: 20px;
-    right: 20px;
+    bottom: 25px;
+    right: 25px;
     padding: 12px 25px;
     font-size: 1rem;
+  }
+
+  /* Adjust the quantity button size */
+  .quantity-btn {
+    width: 30px; /* Set a fixed width for the button */
+    height: 30px; /* Set the height to match the width */
+    font-size: 1.2rem; /* Adjust the font size */
+    padding: 0; /* Remove padding to keep the button compact */
+  }
+
+  /* Adjust the quantity display size */
+  .quantity-display {
+    font-size: 1.1rem;
   }
 }

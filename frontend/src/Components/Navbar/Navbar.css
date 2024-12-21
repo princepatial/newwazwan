@@ -141,26 +141,50 @@ body {
 }
 
 
-
-/* Responsive Mobile Adjustments */
-@media screen and (max-width: 768px) {
+/* Media Query for screen sizes between 768px and 1024px */
+@media (min-width: 768px) and (max-width: 1024px) {
     .navbar {
-        transform: translateX(-100%);
-        width: 100%;
-        max-width: 300px;
+        width: 150px; /* Reduce width for medium screens */
     }
 
-    .navbar.mobile-open {
-        transform: translateX(0);
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .navbar {
-        max-width: 100%;
+    .navbar.collapsed {
+        width: 60px; /* Further reduce width when collapsed */
     }
 
     .vertical-logo {
-        height: 60px;
+        height: 60px; /* Reduce logo size */
+        width: auto;
+    }
+
+    .navbar.collapsed .vertical-logo {
+        transform: scale(0.7); /* Further scale down logo */
+    }
+
+    .vertical-nav-links {
+        gap: 0.8rem; /* Reduce spacing between nav links */
+    }
+
+    .nav-link {
+        padding: 0.5rem 1rem; /* Adjust padding */
+        font-size: 0.9rem; /* Adjust font size */
+    }
+
+    .navbar.collapsed .nav-link {
+        justify-content: center;
+    }
+
+    .nav-link .nav-icon {
+        font-size: 1rem; /* Adjust icon size */
+    }
+
+    .nav-link .nav-text {
+        font-size: 0.85rem; /* Adjust text size */
+    }
+
+    .cart-badge {
+        top: 4px;
+        right: 10px; /* Adjust position of the cart badge */
+        padding: 0.1rem 0.4rem; /* Adjust padding */
+        font-size: 0.65rem; /* Adjust font size */
     }
 }

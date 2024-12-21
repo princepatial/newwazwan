@@ -8,9 +8,9 @@ import RegularCustomer from './Pages/TableSelection/RegularCustomer';
 import Footer from './Components/Footer/Footer';
 import { Routes, Route } from 'react-router-dom';
 import OrderSuccess from './Pages/OrderSuccess/OrderSuccess';
-import TrackOrder from './Pages/TrackOrder/TrackOrder';
 import OrderPopup from './Pages/OrderPopup/OrderPopup';
 import Feedback from './Pages/Feedback/Feedback';
+import Media from './Pages/Media/Media';
 
 function App() { 
   return (
@@ -24,7 +24,7 @@ function App() {
           <Route path="/checkout" element={<Cart />} />
           <Route path="/order-success" element={<OrderSuccess />} />
           <Route path="/feedback" element={<Feedback />} />
-          <Route path="/track-order/:orderId" element={<TrackOrder />} />
+          <Route path="/media" element={<Media />} />
           <Route path="/order-success/:orderId" element={<OrderSuccess />} />
         </Routes>
         <OrderPopup />

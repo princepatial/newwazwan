@@ -299,8 +299,8 @@ const OrderSuccess = () => {
           transition={{ delay: 0.7 }}
         >
           <Link to="/menu" className="action-button primary">Continue Browsing</Link>
-          <Link to={`/track-order/${orderDetails.orderId}`} className="action-button secondary">
-            Track Order
+          <Link to={`/media`} className="action-button secondary">
+            Gallery
           </Link>
         </motion.div>
       </motion.div>

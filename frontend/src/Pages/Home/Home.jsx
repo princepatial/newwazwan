@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { MessageSquare } from 'lucide-react';
+import { MessageSquare, Camera } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
 import Modal from './Modal';
@@ -15,11 +15,15 @@ const Home = () => {
     navigate('/feedback');
   };
 
+  const handleMediaClick = () => {
+    navigate('/media');
+  };
+
   const luxuryDishes = [
     { name: 'Rogan Josh', description: 'Aromatic lamb curry infused with Kashmiri spices' },
     { name: 'Gushtaba', description: 'Velvety meatballs simmered in a rich yogurt sauce' },
     { name: 'Dum Aloo', description: 'Baby potatoes cooked in a fragrant, spiced gravy' },
-    { name: 'Yakhni', description: 'Delicate lamb curry with a aromatic yogurt-based broth' },
+    { name: 'Yakhni', description: 'Delicate lamb curry with an aromatic yogurt-based broth' },
   ];
 
   useEffect(() => {
@@ -38,9 +42,6 @@ const Home = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
-
-
-
 
   useEffect(() => {
     if (showModal) {
@@ -61,11 +62,6 @@ const Home = () => {
   const closeModal = () => {
     setShowModal(false);
   };
-
-
-
-
-
 
   return (
     <div className="luxury-wazwan-home">
@@ -88,11 +84,22 @@ const Home = () => {
         </div>
       </header>
 
+      <motion.button
+        className="media-button"
+        onClick={handleMediaClick}
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        transition={{ type: 'spring', stiffness: 200, damping: 10 }}
+      >
+        <Camera size={24} color="#FFFFFF" />
+      </motion.button>
+
       <section id="experience" className="lwh-experience">
         <div className="lwh-experience-content">
           <h2 className="lwh-section-title">A Culinary Journey</h2>
           <p>Immerse yourself in the opulent world of Wazwan, where centuries-old recipes meet contemporary culinary artistry. Each dish is a masterpiece, crafted to transport you to the majestic valleys of Kashmir.</p>
-
         </div>
       </section>
 
@@ -149,6 +156,7 @@ const Home = () => {
           <button type="submit" className="lwh-submit-button">Secure Your Table</button>
         </form>
       </section>
+
       <motion.div
         className="feedback-button-container"
         initial={{ x: '100%' }}
@@ -160,12 +168,9 @@ const Home = () => {
           <MessageSquare size={24} color="#4CAF50" />
         </button>
       </motion.div>
+
       {showModal && <Modal onClose={closeModal} />}
-
     </div>
-
-
-
   );
 };
 

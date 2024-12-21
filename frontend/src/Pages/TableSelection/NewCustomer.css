@@ -132,8 +132,70 @@ input[type="tel"] {
   100% { transform: rotate(360deg); }
 }
 
-@media (max-width: 768px) {
+/* Media Query for screen size between 768px and 1024px */
+@media (max-width: 1024px) and (min-width: 768px) {
+
+  .content-wrapper {
+    padding: 20px; /* Adjusted padding */
+    max-width: 90%; /* Ensure content fits well on smaller screens */
+    width: 100%;
+  }
+
+  .page-header h1 {
+    font-size: 2rem; /* Smaller header size */
+    margin-bottom: 10px;
+  }
+
+  .page-header p {
+    font-size: 1rem; /* Smaller subtitle */
+  }
+
   .reservation-container {
-    flex-direction: column;
+    display: flex;
+    flex-direction: column; /* Stack the content vertically */
+    gap: 20px;
+  }
+
+  .table-selection, .mobile-input-section {
+    flex: none; /* Allow sections to stack */
+    width: 100%; /* Ensure sections take full width */
+  }
+
+  h2 {
+    font-size: 1.5rem; /* Smaller font size for headings */
+    margin-bottom: 15px;
+  }
+
+  .tables-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Adjust the grid to fit smaller screens */
+    gap: 10px;
+    text-align: center;
+    align-items: center;
+  }
+
+  .table-button {
+    padding: 10px; /* Reduced padding */
+    font-size: 0.9rem; /* Smaller font size for table buttons */
+  }
+
+  .input-group {
+    margin-bottom: 15px; /* Reduced margin */
+  }
+
+  input[type="tel"] {
+    padding: 10px; /* Adjusted padding */
+    font-size: 0.9rem; /* Smaller font size for input */
+  }
+
+  #submit-button {
+    padding: 10px; /* Adjusted padding */
+    font-size: 0.9rem; /* Smaller font size for submit button */
+  }
+
+  .loading-spinner {
+    width: 30px; /* Smaller loading spinner */
+    height: 30px;
+    margin: 15px auto;
   }
 }

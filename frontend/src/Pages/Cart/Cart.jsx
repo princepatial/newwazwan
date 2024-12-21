@@ -132,13 +132,18 @@ const Cart = () => {
             quantity: item.quantity
         }));
 
+        let discountedAmount = finalAmount;
+        if (mobileNumber) {
+            discountedAmount = finalAmount * 0.9; 
+        }
+
         try {
             const response = await axios.post('http://localhost:5000/orders/checkout', {
                 items: orderItems,
                 selectedTable,
                 mobileNumber: mobileNumber || '',
                 userName: mobileNumber ? userName : '',
-                totalAmount: cartTotal
+                totalAmount: discountedAmount.toFixed(2), 
             });
 
             if (response.data.success) {
@@ -241,9 +246,15 @@ const Cart = () => {
                                 <span>GST (5%)</span>
                                 <h3>₹{gst.toFixed(2)}</h3>
                             </div>
+                            {localStorage.getItem('mobileNumber') && (
+                                <div className="summary-row">
+                                    <span>Discount (10%)</span>
+                                    <h3>-₹{(finalAmount * 0.1).toFixed(2)}</h3>
+                                </div>
+                            )}
                             <div className="summary-row total-row">
                                 <span>Total Amount</span>
-                                <h3 className="total-with-gst">₹{finalAmount.toFixed(2)}</h3>
+                                <h3 className="total-with-gst">₹{(localStorage.getItem('mobileNumber') ? (finalAmount * 0.9).toFixed(2) : finalAmount.toFixed(2))}</h3>
                             </div>
                         </div>
                         <button
@@ -305,9 +316,15 @@ const Cart = () => {
                                 <span>GST (5%)</span>
                                 <h3>₹{gst.toFixed(2)}</h3>
                             </div>
+                            {localStorage.getItem('mobileNumber') && (
+                                <div className="summary-row">
+                                    <span>Discount (10%)</span>
+                                    <h3>-₹{(finalAmount * 0.1).toFixed(2)}</h3>
+                                </div>
+                            )}
                             <div className="summary-row total-row">
                                 <span>Total Amount</span>
-                                <h3 className="total-with-gst">₹{finalAmount.toFixed(2)}</h3>
+                                <h3 className="total-with-gst">₹{(localStorage.getItem('mobileNumber') ? (finalAmount * 0.9).toFixed(2) : finalAmount.toFixed(2))}</h3>
                             </div>
                         </div>
 

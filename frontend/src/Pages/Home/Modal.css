@@ -164,41 +164,7 @@
   color: #666;
 }
 
-/* Small Adjustments for Responsiveness */
-@media (max-width: 600px) {
-  .offer-card {
-    padding: 15px;
-  }
 
-  .offer-card h3 {
-    font-size: 16px;
-  }
-
-  .offer-card p {
-    font-size: 12px;
-  }
-}
-
-
-/* Mobile Responsiveness */
-@media (max-width: 600px) {
-  .modal-options {
-    flex-direction: column; /* Stack options vertically on smaller screens */
-  }
-
-  .modal-content {
-    width: 80%; /* Make modal more compact on smaller screens */
-    padding: 20px; /* Adjust padding */
-  }
-
-  .option button {
-    padding: 12px 16px; /* Smaller buttons for smaller screens */
-  }
-
-  .vertical-line {
-    display: none; /* Hide vertical line on mobile screens */
-  }
-}
 
 /* Modal Fade-In Animation */
 @keyframes fadeIn {
@@ -209,3 +175,6 @@
     opacity: 1;
   }
 }
+
+
+
